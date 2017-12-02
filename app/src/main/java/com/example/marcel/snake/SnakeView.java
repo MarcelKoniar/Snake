@@ -3,6 +3,8 @@ package com.example.marcel.snake; /**
  */
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,8 +23,11 @@ public class SnakeView extends SurfaceView implements Runnable{
     private Canvas canvas;
     private SurfaceHolder holder;
     private Paint paint;
+    private Paint paintMouse;
     private Context m_context; //reference to the activity
     private SoundPool soundPool;
+    private int mouse_sound = -1;
+    private int dead_sound = -1;
     //add sounds
     //direction
     public enum Direction{UP,RIGHT,DOWN,LEFT}
@@ -60,6 +65,7 @@ public class SnakeView extends SurfaceView implements Runnable{
         //initialize the drawing objects
         holder=getHolder();
         paint=new Paint();
+        paintMouse=new Paint();
 
         //if score 200 achievement
         snakeX=new int[200];
@@ -109,10 +115,26 @@ public class SnakeView extends SurfaceView implements Runnable{
         // Setup m_NextFrameTime so an update is triggered immediately
         nextFrameTime=System.currentTimeMillis();
     }
+//    public void loadSound(){
+//        soundPool=new SoundPool(10, AudioManager.STREAM_MUSIC,0);
+//        try{
+//            AssetManager manager=m_context.getAssets();
+//            AssetFileDescriptor descriptor;
+//
+//            //prepare sounds in memory
+//            descriptor=manager.openFd("");
+//            mouse_sound=soundPool.load(descriptor,0);
+//            descriptor=manager.openFd("");
+//            dead_sound=soundPool.load(descriptor,0);
+//
+//        }catch(IOException e){
+//
+//        }
+//    }
     public void spawnMouse(){
         Random r=new Random();
-        mouseX=r.nextInt(numBlockWide-1)+1;
-        mouseY=r.nextInt(numBlocksHigh-1)+1;
+        mouseX=r.nextInt(numBlockWide-10)+1;
+        mouseY=r.nextInt(numBlocksHigh-1);
 
     }
     public void eatMouse(){
@@ -154,7 +176,7 @@ public class SnakeView extends SurfaceView implements Runnable{
         boolean dead=false;
         //wall colission
         if(snakeX[0]==-1)dead=true;
-        if(snakeX[0]>=numBlockWide)dead=true;
+        if(snakeX[0]>=numBlockWide-10)dead=true;
         if(snakeY[0]==-1)dead=true;
         if(snakeY[0]>=numBlocksHigh)dead=true;
 
@@ -179,15 +201,26 @@ public class SnakeView extends SurfaceView implements Runnable{
     }
     public void drawGame(){
         if(holder.getSurface().isValid()){
+            Paint controlPanel=new Paint();
+            controlPanel.setColor(Color.argb(255, 0, 102, 0));
             canvas=holder.lockCanvas();
             //background
-            canvas.drawColor(Color.argb(255, 120, 197, 87));
+            canvas.drawColor(Color.argb(255, 0,0,0));
             // Set the color of the paint to draw the snake and mouse with
-            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setColor(Color.argb(255, 0, 102, 0));
             // Choose how big the score will be
             paint.setTextSize(30);
-            canvas.drawText("Score:" + score, 10, 30, paint);
+            paintMouse.setColor(Color.argb(255,255,255,255));
+            paintMouse.setTextSize(100);
+            controlPanel.setColor(Color.BLUE);
+//            controlPanel.setStrokeWidth(0);
+//            controlPanel.setStyle(Paint.Style.STROKE);
+//            canvas.drawRect( screenWidth-300, 0, 0, 0, controlPanel);
+            canvas.drawRect(screenWidth-300, 0, screenWidth, screenHeight, controlPanel);
+            canvas.drawText("Score:" + score, screenWidth-150, 30, paint);
+
             //draw snake
+
             for(int i=0;i<snakeLength;i++){
                 canvas.drawRect(snakeX[i]*blockSize,(snakeY[i]*blockSize),(snakeX[i]*blockSize)+blockSize,(snakeY[i]*blockSize)+blockSize,paint);
 
@@ -197,8 +230,21 @@ public class SnakeView extends SurfaceView implements Runnable{
                     (mouseY * blockSize),
                     (mouseX * blockSize) + blockSize,
                     (mouseY * blockSize) + blockSize,
-                    paint);
+                    paintMouse);
             //draw the whole frame
+             //bitmap buttons...
+            Bitmap bmpP1 = BitmapFactory.decodeResource(getResources(), R.mipmap.arrow);
+            Bitmap bmpP2 = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round);
+            bmpP1 = Bitmap.createScaledBitmap(bmpP1,300,300,false);
+            bmpP2 = Bitmap.createScaledBitmap(bmpP2,20,20,false);
+
+
+
+                        canvas.drawBitmap(bmpP1, screenWidth-300,screenHeight-350, null);
+
+
+
+
             holder.unlockCanvasAndPost(canvas);
 
 
@@ -220,40 +266,43 @@ public class SnakeView extends SurfaceView implements Runnable{
 
         return false;
     }
+
     @Override public boolean onTouchEvent(MotionEvent motionEvent){
         switch (motionEvent.getAction()& MotionEvent.ACTION_MASK){
             case MotionEvent.ACTION_UP:
                 if(motionEvent.getX()>=screenWidth/2){
-                    switch (direction){
-                        case UP:
-                            direction= Direction.RIGHT;
-                            break;
-                        case RIGHT:
-                            direction= Direction.DOWN;
+
+                   switch (direction){
+                      case UP:
+                          direction= Direction.RIGHT;
+                           break;
+                      case RIGHT:
+                           direction= Direction.DOWN;
                             break;
                         case DOWN:
-                            direction= Direction.LEFT;
-                            break;
-                        case LEFT:
-                            direction= Direction.UP;
-                            break;
-                    }
+                           direction= Direction.LEFT;
+                           break;
+                       case LEFT:
+                           direction= Direction.UP;
+                           break;
+                   }
 
                 }else {
-                    switch (direction){
+
+                  switch (direction){
                         case UP:
-                            direction= Direction.LEFT;
+                           direction= Direction.LEFT;
                             break;
-                        case LEFT:
-                            direction= Direction.DOWN;
+                       case LEFT:
+                           direction= Direction.DOWN;
                             break;
                         case DOWN:
-                            direction= Direction.RIGHT;
+                           direction= Direction.RIGHT;
                             break;
-                        case RIGHT:
-                            direction= Direction.UP;
+                       case RIGHT:
+                           direction= Direction.UP;
                             break;
-                    }
+                  }
                 }
 
 
