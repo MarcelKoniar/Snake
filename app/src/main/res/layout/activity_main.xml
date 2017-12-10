@@ -20,22 +20,31 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintVertical_bias="0.07" />
 
-    <TextView
-        android:id="@+id/scoreTxtView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="14dp"
-        android:text="TextView" />
+    <!--<TextView-->
+        <!--android:id="@+id/scoreTxtView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginTop="14dp"-->
+        <!--android:text="TextView" />-->
 
-    <TextView
-        android:id="@+id/highScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/scoreTxtView"
-        android:layout_marginEnd="16dp"
-        android:layout_toStartOf="@+id/scoreTxtView"
-        android:text="HighScore" />
+    <!--<TextView-->
+        <!--android:id="@+id/highScore"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignTop="@+id/scoreTxtView"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:layout_toStartOf="@+id/scoreTxtView"-->
+        <!--android:text="HighScore" />-->
+
+    <!--<Switch-->
+        <!--android:id="@+id/switchSounds"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignEnd="@+id/playBtn"-->
+        <!--android:layout_below="@+id/playBtn"-->
+        <!--android:layout_marginTop="99dp"-->
+        <!--android:text="Sounds" />-->
 
 </RelativeLayout>
